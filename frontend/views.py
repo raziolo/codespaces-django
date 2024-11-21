@@ -44,7 +44,7 @@ for mese, personale in pianificazione_personale.items():
 
 
 '''
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from django.utils.dateparse import parse_date
 
 
@@ -118,3 +118,38 @@ def testdata():
         V = Venduto.objects.create(data=data, valore=valore)
         V.save()
 
+def grafico_venduto(request):
+    if request.method == "GET":
+        try:
+            mese = request.GET.get('mese', None)
+        except Exception as e:
+            print(e)
+        if mese:
+            return render(request, template_name="frontend/grafico_venduto.html")
+        if not mese:
+            mese = datetime.now().month
+            return render(request, template_name="frontend/grafico_venduto.html")
+
+
+
+
+
+def get_venduto(request):
+    if request.method == "GET":
+        try:
+            mese = request.GET.get('mese', None)
+            mese = int(mese)
+        except Exception as e:
+            print(e)
+        if mese:
+            print(mese)
+            venduti = Venduto.objects.filter(data__month=mese)
+            data_dict = {venduto.data.strftime("%d-%m-%Y"): venduto.valore for venduto in venduti}
+            print(data_dict)
+            venduti = Venduto.objects.all()
+            # Modifica il formato della risposta per includere la chiave "data"
+            return JsonResponse({"data": data_dict})
+        if not mese:
+            venduti = Venduto.objects.filter(data__month=datetime.now().month)
+            data_dict = {venduto.data.strftime("%d-%m-%Y"): venduto.valore for venduto in venduti}
+            return JsonResponse({"data": data_dict})

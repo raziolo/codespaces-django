@@ -14,6 +14,8 @@
     <!-- Include Moment.js and DataTables Date Plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.13.4/sorting/datetime-moment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 
 </head>
@@ -27,7 +29,7 @@
             <div class="dropdown-content">
                 <a href="#" hx-get="/inserisci_venduto" hx-target="#dynamic-content" hx-swap="innerHTML">Inserisci Venduto</a>
                 <a href="#" hx-get="/storico_venduto" hx-target="#dynamic-content" hx-swap="innerHTML">Storico Venduto</a>
-                <a href="#" hx-get="/services" hx-target="#dynamic-content" hx-swap="innerHTML">Services</a>
+                <a href="#" hx-get="/grafico_venduto/" hx-target="#dynamic-content" hx-swap="innerHTML">Grafico Venduto</a>
             </div>
         </div>
         </div>

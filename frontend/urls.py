@@ -24,4 +24,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('inserisci_venduto/', views.inserisci_venduto, name='inserisci_venduto'),
     path('storico_venduto/', views.storico_venduto, name='storico_venduto'),
+    path('grafico_venduto/', views.grafico_venduto, name='grafico_venduto'),
+    path('get_venduto/', views.get_venduto, name='get_venduto'),
+
 ]

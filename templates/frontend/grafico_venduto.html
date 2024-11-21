@@ -1,0 +1,111 @@
+<body>
+  <h1>Grafico Vendite Mensili</h1>
+  
+  <!-- Selettore mese -->
+  <label for="monthSelector">Seleziona il mese:</label>
+  <select id="monthSelector">
+    <option value="1">Gennaio</option>
+    <option value="2">Febbraio</option>
+    <option value="3">Marzo</option>
+    <option value="4">Aprile</option>
+    <option value="5">Maggio</option>
+    <option value="6">Giugno</option>
+    <option value="7">Luglio</option>
+    <option value="8">Agosto</option>
+    <option value="9">Settembre</option>
+    <option value="10">Ottobre</option>
+    <option value="11" selected>Novembre</option>
+    <option value="12">Dicembre</option>
+  </select>
+
+  <!-- Contenitore del grafico -->
+  <div id="chartContainer">
+    <canvas id="barChart" width="400" height="200"></canvas>
+  </div>
+
+  <script>
+    // Function to initialize the chart page
+    function initializeChartPage() {
+      const monthSelector = document.getElementById('monthSelector');
+      const barChartCanvas = document.getElementById('barChart');
+  
+      if (!monthSelector || !barChartCanvas) {
+        return; // Exit if the elements are not present
+      }
+  
+      let barChart = null;
+  
+      // Function to update the chart
+      function updateChart(labels, data) {
+        const ctx = barChartCanvas.getContext('2d');
+  
+        if (barChart) {
+          barChart.destroy(); // Destroy the existing chart to prevent duplicates
+        }
+  
+        barChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Valore Venduto (€)',
+              data: data,
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true }
+            },
+            scales: {
+              x: { title: { display: true, text: 'Date' } },
+              y: { beginAtZero: true, title: { display: true, text: 'Valore Venduto (€)' } }
+            }
+          }
+        });
+      }
+  
+      // Function to fetch data and update the chart
+      async function fetchData(mese) {
+        try {
+          const response = await fetch(`/get_venduto/?mese=${mese}`);
+          if (!response.ok) {
+            throw new Error('Errore durante il recupero dei dati');
+          }
+  
+          const jsonData = await response.json();
+          if (jsonData.data) {
+            const labels = Object.keys(jsonData.data);
+            const data = Object.values(jsonData.data);
+            updateChart(labels, data);
+          } else {
+            console.error('Formato dati non valido');
+          }
+        } catch (error) {
+          console.error('Errore:', error);
+        }
+      }
+  
+      // Add event listener for month changes
+      monthSelector.addEventListener('change', (event) => {
+        fetchData(event.target.value);
+      });
+  
+      // Load the default data
+      fetchData(monthSelector.value);
+    }
+  
+    // Reinitialize chart after HTMX swaps content
+    document.addEventListener('htmx:afterSwap', (event) => {
+      if (event.detail.target.id === 'dynamic-content') {
+        initializeChartPage(); // Call chart initialization
+      }
+    });
+  
+    // Initialize chart logic on first load
+    initializeChartPage();
+  </script>
+</body>

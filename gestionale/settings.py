@@ -25,7 +25,25 @@ SECRET_KEY = 'django-insecure-z%8mmy%1lfoepoxs*11!bkzp2gq+l)9r8i$=hc1$v44cvu0&b(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+# CORS Allowed Origins
+CORS_ALLOWED_ORIGINS = [
+    "https://github.dev",
+    "https://studious-potato-5r9v599rp5g344gg-8000.app.github.dev",
+]
+
+# Optional: Allow only specific HTTP methods (e.g., GET and POST)
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+]
+
+# Optional: Allow specific headers (if required by your app)
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
+]
 
 import os
 
@@ -46,10 +64,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'frontend.apps.FrontendConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add this line
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
