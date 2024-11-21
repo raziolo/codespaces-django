@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Homepage</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src={% static 'scripts/table.js' %}></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- Include Moment.js and DataTables Date Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.13.4/sorting/datetime-moment.js"></script>
+
+
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <a href="/"><strong>Logo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></a>
+
+            <div class="dropdown">
+            <button class="dropdown-button">Venduto</button>
+            <div class="dropdown-content">
+                <a href="#" hx-get="/inserisci_venduto" hx-target="#dynamic-content" hx-swap="innerHTML">Inserisci Venduto</a>
+                <a href="#" hx-get="/storico_venduto" hx-target="#dynamic-content" hx-swap="innerHTML">Storico Venduto</a>
+                <a href="#" hx-get="/services" hx-target="#dynamic-content" hx-swap="innerHTML">Services</a>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+    <div class="content">
+        <div id="dynamic-content">
+            <p>HOMEPAGE</p> <!-- GRAFICI IN HOMEPAGE TARGET VENDITA IN HOMEPAGE -->
+        </div>
+    </div>
+
+
+</body>
+</html>

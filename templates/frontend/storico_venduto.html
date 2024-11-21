@@ -1,0 +1,82 @@
+<h1>Storico Venduto</h1>
+
+<!-- Date Filter Section -->
+<div>
+    <label for="date-filter">Filter by Date:</label>
+    <input type="date" id="date-filter" name="date-filter"
+           hx-get="{% url 'storico_venduto' %}"
+           hx-target="#dynamic-content"
+           hx-trigger="input changed delay:500ms">
+    <button id="reset-filters" class="btn">Reset Filters</button>
+</div>
+
+<!-- Table Wrapper -->
+<div id="table-wrapper">
+    <table id="venduto-table" class="display">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Valore</th>
+                <th>Dettaglio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venduto in venduti %}
+            <tr>
+                <td>{{ venduto.data|date:"d-m-Y" }}</td>
+                <td>{{ venduto.valore }}</td>
+                <td><a href="dettaglio_venduto/{{ venduto.id }}">Dettaglio Venduto</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    function initializeDataTable() {
+        // Destroy existing DataTable if initialized
+        if ($.fn.DataTable.isDataTable('#venduto-table')) {
+            $('#venduto-table').DataTable().destroy();
+        }
+
+        // Load Moment.js Date Sorting Plugin
+        $.fn.dataTable.moment('DD-MM-YYYY');
+
+        // Reinitialize DataTable
+        $('#venduto-table').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            scrollX: true,
+            order: [[0, 'asc']], // Sort by date column by default
+            columnDefs: [
+                { type: 'date', targets: 0 } // Specify date column for sorting
+            ],
+        });
+    }
+
+    // Reinitialize DataTables after HTMX content swap
+    document.addEventListener('htmx:afterSwap', function () {
+        initializeDataTable();
+    });
+
+    // Initial DataTables setup
+    $(document).ready(function () {
+        initializeDataTable();
+
+        // Reset filters button functionality
+        $('#reset-filters').on('click', function () {
+            // Clear the date input
+            $('#date-filter').val('');
+
+            // Reload the unfiltered data via HTMX
+            htmx.ajax('GET', '{% url "storico_venduto" %}', {
+                target: '#dynamic-content',
+                swap: 'innerHTML',
+            });
+        });
+    });
+</script>
